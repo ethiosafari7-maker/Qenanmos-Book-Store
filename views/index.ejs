@@ -3,100 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>የኢትዮ መጽሐፍት መፈለጊያ</title>
+    <title>Qenanmos መጽሐፍት መፈለጊያ</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary-color: #0088cc;
-            --bg-color: #f0f2f5;
-        }
-        body {
-            font-family: 'Noto Sans Ethiopic', sans-serif;
-            background-color: var(--bg-color);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        h1 { color: #333; margin-bottom: 20px; }
+        :root { --primary-color: #0088cc; --bg-color: #f8f9fa; }
+        body { font-family: 'Noto Sans Ethiopic', sans-serif; background-color: var(--bg-color); margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; }
+        header { background-color: white; width: 100%; padding: 20px 0; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { margin: 0; color: var(--primary-color); font-size: 1.8rem; }
         
-        .search-container {
-            width: 100%;
-            max-width: 500px;
-            margin-bottom: 30px;
-        }
-        .search-box {
-            width: 100%;
-            padding: 15px 25px;
-            border-radius: 50px;
-            border: 2px solid #ddd;
-            font-size: 16px;
-            outline: none;
-            transition: 0.3s;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        }
-        .search-box:focus { border-color: var(--primary-color); }
-
-        .book-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-            width: 100%;
-            max-width: 1000px;
-        }
-        .book-card {
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
-            text-align: center;
-            transition: transform 0.2s;
-        }
-        .book-card:hover { transform: translateY(-5px); }
-        .book-title { font-size: 1.2rem; margin: 10px 0; color: #222; }
-        .book-author { color: #666; font-size: 0.9rem; margin-bottom: 15px; }
+        /* የፍለጋ ሳጥን ዲዛይን */
+        .search-container { width: 90%; max-width: 600px; margin: 30px 0; position: relative; }
+        .search-box { width: 100%; padding: 15px 50px 15px 25px; border-radius: 50px; border: 2px solid #ddd; font-size: 16px; outline: none; transition: 0.3s; box-sizing: border-box; }
+        .search-box:focus { border-color: var(--primary-color); box-shadow: 0 4px 15px rgba(0,136,204,0.2); }
         
-        .download-btn {
-            display: inline-block;
-            background-color: var(--primary-color);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 25px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-        .download-btn:hover { background-color: #0077b5; box-shadow: 0 4px 12px rgba(0,136,204,0.3); }
+        /* የፍለጋ ምልክት (🔍) */
+        .search-icon { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); font-size: 20px; color: #888; pointer-events: none; }
 
-        .no-results { color: #888; margin-top: 50px; }
+        .book-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; width: 90%; max-width: 1200px; padding-bottom: 50px; }
+        .book-card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); text-align: center; transition: 0.3s; border: 1px solid #eee; }
+        .book-title { font-size: 1.2rem; font-weight: bold; margin: 10px 0; color: #333; }
+        .download-btn { display: inline-block; background-color: var(--primary-color); color: white; padding: 12px 25px; border-radius: 30px; text-decoration: none; font-weight: bold; font-size: 0.9rem; }
+        .no-results { display: none; color: #999; margin-top: 50px; text-align: center; width: 100%; }
     </style>
 </head>
 <body>
 
-    <h1>📚 መጽሐፍ ይፈልጉ</h1>
+    <header>
+        <h1>📚 Qenanmos Book Store</h1>
+    </header>
 
     <div class="search-container">
-        <form action="/" method="GET">
-            <input type="text" name="search" class="search-box" placeholder="የመጽሐፍ ስም ወይም ደራሲ..." autofocus>
-        </form>
+        <input type="text" id="searchInput" class="search-box" placeholder="የመጽሐፍ ስም እዚህ መጻፍ ይጀምሩ..." autocomplete="off">
+        <span class="search-icon">🔍</span>
     </div>
 
-    <div class="book-grid">
-        <% if (books.length > 0) { %>
+    <div class="book-grid" id="bookGrid">
+        <% if (books && books.length > 0) { %>
             <% books.forEach(book => { %>
                 <div class="book-card">
+                    <div style="font-size: 40px;">📄</div>
                     <div class="book-title"><%= book.title %></div>
-                    <div class="book-author">👤 <%= book.author || 'ያልታወቀ ደራሲ' %></div>
-                    <a href="https://t.me/የአንተ_ቦት_Username?start=<%= book.fileId %>" class="download-btn">
-                        📥 በቴሌግራም አውርድ
-                    </a>
+                    <div style="color: #777; margin-bottom: 15px;">👤 Qenanmos Store</div>
+                    <a href="https://t.me/QenanmosBookStore_bot?start=<%= book.fileId %>" class="download-btn">📥 በቴሌግራም አውርድ</a>
                 </div>
             <% }) %>
-        <% } else { %>
-            <p class="no-results">ምንም መጽሐፍ አልተገኘም። እባክዎ ሌላ ስም ይሞክሩ።</p>
         <% } %>
     </div>
+
+    <div id="noResults" class="no-results">
+        <p>የፈለጉት መጽሐፍ አልተገኘም።</p>
+    </div>
+
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        const bookGrid = document.getElementById('bookGrid');
+        const bookCards = document.getElementsByClassName('book-card');
+        const noResults = document.getElementById('noResults');
+
+        searchInput.addEventListener('input', function() {
+            const filter = searchInput.value.toLowerCase();
+            let hasMatches = false;
+
+            for (let i = 0; i < bookCards.length; i++) {
+                const title = bookCards[i].getElementsByClassName('book-title')[0].innerText.toLowerCase();
+                
+                if (title.includes(filter)) {
+                    bookCards[i].style.display = "";
+                    hasMatches = true;
+                } else {
+                    bookCards[i].style.display = "none";
+                }
+            }
+
+            // ውጤት ከሌለ መልዕክት ለማሳየት
+            if (hasMatches) {
+                noResults.style.display = "none";
+            } else {
+                noResults.style.display = "block";
+            }
+        });
+    </script>
 
 </body>
 </html>
