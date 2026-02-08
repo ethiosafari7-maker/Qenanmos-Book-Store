@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="am" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qenanmos መጽሐፍት መፈለጊያ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #0088cc;
+            --bg-color: #f8f9fa;
+            --text-color: #333;
+        }
+        body {
+            font-family: 'Noto Sans Ethiopic', sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        header {
+            background-color: white;
+            width: 100%;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        h1 { margin: 0; color: var(--primary-color); font-size: 1.8rem; }
+        
+        .search-container {
+            width: 90%;
+            max-width: 600px;
+            margin-bottom: 40px;
+        }
+        .search-box {
+            width: 100%;
+            padding: 15px 25px;
+            border-radius: 50px;
+            border: 2px solid #ddd;
+            font-size: 16px;
+            outline: none;
+            transition: 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            box-sizing: border-box;
+        }
+        .search-box:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 15px rgba(0,136,204,0.2);
+        }
+
+        .book-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            width: 90%;
+            max-width: 1200px;
+            padding-bottom: 50px;
+        }
+        .book-card {
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            text-align: center;
+            transition: transform 0.3s ease;
+            border: 1px solid #eee;
+        }
+        .book-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+        .book-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+        .book-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin: 10px 0;
+            color: var(--text-color);
+            line-height: 1.4;
+        }
+        .book-author {
+            color: #777;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+        }
+        
+        .download-btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
+            font-size: 0.9rem;
+        }
+        .download-btn:hover {
+            background-color: #0077b5;
+        }
+
+        .no-results {
+            color: #999;
+            margin-top: 60px;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+
+        footer {
+            margin-top: auto;
+            padding: 20px;
+            color: #888;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>📚 Qenanmos Book Store</h1>
+    </header>
+
+    <div class="search-container">
+        <form action="/" method="GET">
+            <input type="text" name="search" class="search-box" placeholder="የመጽሐፍ ስም ወይም ደራሲ እዚህ ይፈልጉ..." autocomplete="off">
+        </form>
+    </div>
+
+    <div class="book-grid">
+        <% if (books && books.length > 0) { %>
+            <% books.forEach(book => { %>
+                <div class="book-card">
+                    <div class="book-icon">📄</div>
+                    <div class="book-title"><%= book.title %></div>
+                    <div class="book-author">👤 <%= book.author || 'ያልታወቀ ደራሲ' %></div>
+                    <a href="https://t.me/QenanmosBookStore_bot?start=<%= book.fileId %>" class="download-btn">
+                        📥 በቴሌግራም አውርድ
+                    </a>
+                </div>
+            <% }) %>
+        <% } else { %>
+            <div class="no-results">
+                <p>ምንም መጽሐፍ አልተገኘም። <br> እባክዎ ሌላ ቃል ተጠቅመው ይፈልጉ።</p>
+            </div>
+        <% } %>
+    </div>
+
+    <footer>
+        &copy; 2024 Qenanmos Book Store - በቴሌግራም ቦት የተደገፈ
+    </footer>
+
+</body>
+</html>
